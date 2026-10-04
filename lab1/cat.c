@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 struct flag_cat
 {
@@ -26,11 +27,25 @@ char print_dollar(bool flag)
 
 int main(int argc, char* argv[])
 {
+    if (argc < 2)
+    {
+        exit(1);
+    }
+
+    struct stat sb;
+    fstat(STDOUT_FILENO, &sb);
+
+    if (S_ISFIFO(sb.st_mode)) 
+    {
+        setvbuf(stdout, NULL, _IONBF, 0);
+    }
+
     struct flag_cat flag;
     int opt;
     flag.n = 0;
     flag.E = 0;
     flag.b = 0;
+    
     while ((opt = getopt(argc, argv, "nbE")) != -1) 
     {
         switch (opt)
@@ -50,12 +65,14 @@ int main(int argc, char* argv[])
             break;
         }
     }
+
     FILE *fp;
     if((fp=fopen(argv[optind], "r"))== 0)
     {
         printf ("Cannot open file.\n");
         exit(1);
     }
+
     int count = 1;
     char buffer[1024];
     while (fgets(buffer, sizeof(buffer), fp) != 0)
@@ -90,9 +107,11 @@ int main(int argc, char* argv[])
         {
             printf("%s", buffer);
         }
+        fflush(stdout); 
     }
-    printf("n: %d ", flag.n);
-    printf("E: %d ", flag.E);
-    printf("b: %d ", flag.b);
+
+    // printf("n: %d ", flag.n);
+    // printf("E: %d ", flag.E);
+    // printf("b: %d ", flag.b);
     return 0;
 }
