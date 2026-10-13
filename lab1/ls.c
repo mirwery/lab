@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
     {
         for (int i = start_fileout; i < n; ++i)
         {   
-            if (stat(namelist[i]->d_name, &file_stat) == 0) 
+            if (lstat(namelist[i]->d_name, &file_stat) == 0) 
             {
                 char color[16] = "\033[0m";
                 if (S_ISDIR(file_stat.st_mode))
@@ -146,10 +146,24 @@ int main(int argc, char* argv[])
                 }
                 print_permissions(file_stat.st_mode);
                 printf("%d ", file_stat.st_nlink);
-                pw = getpwuid(file_stat.st_uid);
-                gr = getgrgid(file_stat.st_gid);
-                printf("%s ", pw->pw_name);
-                printf("%s ", gr->gr_name);
+                struct passwd *pw = getpwuid(file_stat.st_uid);
+                struct group  *gr = getgrgid(file_stat.st_gid);
+                if (pw != NULL)
+                {
+                    printf("%s ", pw->pw_name);
+                }
+                else
+                {
+                    printf("%d ", file_stat.st_uid);
+                }
+                if (gr != NULL)
+                {
+                    printf("%s ", gr->gr_name);
+                }
+                else
+                {
+                    printf("%d ", file_stat.st_gid);
+                }
                 printf("%d ", file_stat.st_size);
                 time_info = gmtime(&file_stat.st_mtime);
                 char time_string[64];
