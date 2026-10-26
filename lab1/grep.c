@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
     struct stat sb;    
     char buffer[1024];

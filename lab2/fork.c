@@ -36,7 +36,7 @@ void custom_term(int sig)
 }
 
 
-int main()
+int main(int argc, char** argv)
 {
     struct sigaction sa;
     sa.sa_handler = custom_term;
@@ -81,12 +81,7 @@ int main()
             printf("---------------------------------------------------------------------\n");
             wait(&exit_status);
             printf("Parent: code return child:%d\n", exit_status);
-            int a;
-            scanf("%d", &a);
-            while (a != 0)
-            {
-                scanf("%d", &a);
-            }
+            sleep(10);
     }
     return 0;
 }

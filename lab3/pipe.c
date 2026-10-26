@@ -7,7 +7,7 @@
 #include <sys/wait.h>
 #include <time.h>
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
     int pipefd[2];
     pid_t pid;

@@ -25,7 +25,7 @@ char print_dollar(bool flag)
 
 
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
     struct stat sb;
     struct flag_cat flag = {0};
